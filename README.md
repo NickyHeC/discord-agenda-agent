@@ -33,6 +33,8 @@ discord-agenda-agent/
 
 ## Prerequisites
 
+Python 3.11+ is required.
+
 1. **Discord Bot Setup:**
    - Create a Discord app at https://discord.com/developers/applications
    - Create a bot and get the bot token
