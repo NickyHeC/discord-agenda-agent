@@ -7,12 +7,21 @@ from datetime import datetime
 from dedalus_labs import AsyncDedalus, DedalusRunner
 # from dedalus_labs.utils.stream import stream_async
 from dotenv import load_dotenv
-from connection import x_secrets, discord_secrets
 
 load_dotenv()
 
 DISCORD_API = "https://discord.com/api/v9"
 DISCORD_MAX = 2000
+
+
+def require_python_311() -> bool:
+    """Return True if Python is new enough; otherwise print a message and return False."""
+    if sys.version_info < (3, 11):
+        version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+        print(f"ℹ️ Python {version} detected. This project requires Python 3.11+.", flush=True)
+        print("   Please upgrade Python and recreate your venv, then try again.", flush=True)
+        return False
+    return True
 
 
 def chunk(text: str, limit: int = DISCORD_MAX) -> list[str]:
@@ -91,6 +100,10 @@ After collecting events (or if none found), output the compiled agenda directly.
 
 async def main():
     """Main function to run the Discord Agenda Agent."""
+    if not require_python_311():
+        return
+    from connection import x_secrets, discord_secrets
+
     client = AsyncDedalus(timeout=900)  # 15 minutes
     runner = DedalusRunner(client)
     
